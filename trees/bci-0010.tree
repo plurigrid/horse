@@ -23,7 +23,7 @@
 \ul{
   \li{\strong{Substrate}: TPU filament, Shore hardness A 93 (e.g., NinjaTek NinjaFlex, Polymaker PolyFlex). Print on any FDM printer with direct-drive extruder at 220-230°C. Layer height 0.1mm for smooth skin contact.}
   \li{\strong{Coating}: Ag/AgCl via electroless plating (Vasconcelos method) — immerse in PVP:DMSO solution, functionalize with silver ions, reduce to metallic silver, chlorinate. Survives 400\% strain and 500+ bending cycles.}
-  \li{\strong{DIY alternative}: Skip plating. Wrap arch tips with conductive fabric tape (Adafruit \#3960) or apply conductive paint (MG Chemicals 842AR). Lower signal quality but zero chemistry required.}
+  \li{\strong{DIY alternative}: Skip plating. Wrap arch tips with conductive fabric tape (Adafruit #3960) or apply conductive paint (MG Chemicals 842AR). Lower signal quality but zero chemistry required.}
 }
 }
 
