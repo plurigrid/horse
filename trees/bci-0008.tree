@@ -1,0 +1,118 @@
+\title{Structure-Aware Diffing in the BCI Pipeline}
+\author{monaduck1069}
+\import{macros}
+\date{2026-03-31}
+\taxon{theory}
+
+\p{The BCI pipeline produces streams of neural state. Each reading is a snapshot.
+The question: how do you diff two snapshots \em{structurally} — not as flat vectors,
+but as objects in a category where morphisms carry meaning?}
+
+\subtree{
+\title{Three Approaches to Diffing}
+
+\subtree{
+\title{1. Flat Diff (JSON Patch)}
+\p{CatColab uses \code{fast-json-patch} to compute diffs between document states.
+A patch is a list of \code{add/remove/replace} operations on paths. This is
+syntactic — it knows nothing about the categorical structure of the content.
+It works for triggering re-elaboration (via \code{isPatchToFormalContent}),
+but it cannot express \em{what changed mathematically}.}
+
+\p{In BCI terms: comparing two EEG spectral vectors by element-wise subtraction.
+You get numbers, not meaning. "Alpha went up 0.03" vs "the rider shifted from
+rest to motor imagery."}
+}
+
+\subtree{
+\title{2. CRDT Diff (Automerge)}
+\p{Automerge tracks operations, not states. The diff is the operation log between
+two document versions. This is \em{causal} — it preserves the order and origin
+of changes, enabling real-time collaboration without conflicts.}
+
+\p{In BCI terms: the raw EEG stream is the operation log. Each sample is an
+operation on the cortical state. The CRDT approach would track \em{which electrodes
+changed and when}, preserving temporal causality across channels.
+This is what \code{brainfloj.bb} does when it fans out NDJSON to bci.red and bci.blue —
+each site sees the same causal stream.}
+}
+
+\subtree{
+\title{3. Categorical Diff (Morphism)}
+\p{The structure-aware diff computes a \strong{morphism} between two states in a
+category of neural configurations. Not "alpha changed by 0.03" but
+"there exists a natural transformation from the rest-state presheaf to the
+active-state presheaf, and its components at C3 and C4 exhibit mu suppression."}
+
+\p{This is the sheaf-theoretic approach from [[bci-0001]]:}
+
+\ol{
+  \li{\strong{Local patches}: Each electrode gives a local section — band powers
+      at one site. The diff between REST and ACTIVE at C3 is a local morphism.}
+  \li{\strong{Gluing}: The descent condition ([[bci-stage-3]]) glues local diffs
+      into a global transformation. If C3 shows mu suppression and C4 doesn't,
+      the global diff is \em{lateralized} — it has a non-trivial cocycle.}
+  \li{\strong{Cohomological invariant}: The obstruction to gluing all local diffs
+      into a single global diff lives in H¹ of the electrode topology. This is
+      the \strong{gap} — the same gap displayed in the self-serve reading
+      between name-color and brain-color ([[bcf-0030]]).}
+}
+}
+}
+
+\subtree{
+\title{The GF(3) Trit-Diff}
+
+\p{Each phase in the self-serve protocol carries a trit:}
+
+\table{
+  \tr{\th{Phase} \th{Trit} \th{Diff Semantics}}
+  \tr{\td{REST → ACTIVE} \td{-1 → +1} \td{Alpha desynchronization. The diff is a \em{destruction} — resting state dissolves.}}
+  \tr{\td{ACTIVE → FREE} \td{+1 → 0} \td{Beta decay. The diff is a \em{relaxation} — motor intent dissipates.}}
+  \tr{\td{FREE → REST} \td{0 → -1} \td{Theta drift. The diff is an \em{absorption} — free state settles.}}
+}
+
+\p{The sum of trit-diffs around the cycle: (+2) + (-1) + (-1) = 0. Conservation.
+The categorical content: the composition of three morphisms around the cycle
+is the identity (up to natural isomorphism). This is the \strong{cocycle condition}
+for a sheaf on the GF(3) phase circle.}
+}
+
+\subtree{
+\title{Implementation: Diffing in Basilisp + Hy}
+
+\p{The \code{braingloj} pipeline implements two levels:}
+
+\ol{
+  \li{\strong{braingloj_color.hy} computes flat diffs: alpha desynchronization
+      percentage, beta rebound, theta/beta ratio. These are the JSON-patch
+      equivalent — useful, but not structural.}
+  \li{\strong{braingloj.lsp} orchestrates the phase sequence and could compute
+      morphism-level diffs: for each good channel, compare the band power
+      vector across phases as a transformation in the simplex category
+      (since band powers sum to 1). The morphism is a stochastic map
+      between probability distributions over frequency bands.}
+}
+
+\p{The missing piece: gluing. When C3 and O1 both show alpha changes,
+are they \em{the same} change restricted to different sites, or \em{different}
+changes that happen to agree? The descent computation ([[bci-stage-3]])
+answers this. It hasn't been implemented yet.}
+}
+
+\subtree{
+\title{Connection to CatColab}
+
+\p{CatColab's \code{isPatchToFormalContent} distinguishes cosmetic from formal
+changes. The BCI analogue: distinguishing \em{artifact} from \em{signal}.
+A DC offset drift is cosmetic. A mu rhythm suppression is formal.
+The quality checker (\code{braingloj_quality.hy}) gates on std/railed/noisy
+status — this is the BCI equivalent of CatColab's patch filter.}
+
+\p{The deeper connection: CatColab represents models as objects in a
+double category ([[bci-0001]]). A diff between models is a morphism in
+that double category. The BCI pipeline represents neural states as
+sections of a sheaf. A diff between states is a morphism of sections.
+Both are instances of the same pattern: \strong{structure-preserving maps
+in a category of structured objects}.}
+}

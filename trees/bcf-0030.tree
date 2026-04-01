@@ -1,0 +1,99 @@
+\title{Self-Serve BCI Readings}
+\author{monaduck1069}
+\import{macros}
+\date{2026-03-31}
+\taxon{protocol}
+\meta{institution}{BCI Factory}
+
+\p{Walk in. Sit down. See your brain. No appointment. No operator. No signup.}
+
+\subtree{
+\title{What You Need}
+
+\ol{
+  \li{A head}
+  \li{2 minutes}
+}
+
+\p{Everything else is at the station. The headset is on the hook. The screen is on. The kiosk walks you through it.}
+}
+
+\subtree{
+\title{The Station}
+
+\p{One chair. One screen running Emacs in kiosk mode. One OpenBCI Cyton 8ch headset on a hook beside the chair. Conductive paste in a squeeze bottle. Paper towels.}
+
+\table{
+  \tr{\th{Component} \th{What} \th{Where}}
+  \tr{\td{Headset} \td{OpenBCI Cyton 8ch + Ultracortex Mark IV} \td{Hook, left of chair}}
+  \tr{\td{Dongle} \td{USB serial DP05IU8D} \td{Plugged into kiosk Mac}}
+  \tr{\td{Paste} \td{Ten20 conductive paste} \td{Squeeze bottle on tray}}
+  \tr{\td{Screen} \td{Emacs terminal, kiosk mode} \td{Eye level from chair}}
+  \tr{\td{Towels} \td{Paper towels} \td{Dispenser on wall}}
+}
+}
+
+\subtree{
+\title{The Protocol (2 minutes)}
+
+\subtree{
+\title{Step 1: Name (10 seconds)}
+\p{The kiosk asks your name. Type anything — real name, handle, emoji, random keysmash. Your name seeds a SplitMix64 hash that generates \strong{your color}. This is deterministic: same name → same color, forever. The screen shows your color.}
+}
+
+\subtree{
+\title{Step 2: Headset (60 seconds)}
+\p{Pick up the headset from the hook. The electrodes are dry (Ultracortex spikes) — no paste needed for a quick reading. Place it on your head. The kiosk shows a diagram: front notch goes on your forehead. Adjust until snug. The impedance check runs automatically — green dots appear as each channel makes contact.}
+
+\p{If you want better signal: squeeze a small amount of Ten20 paste on each electrode tip before placing. This is optional. Dry electrodes work.}
+}
+
+\subtree{
+\title{Step 3: Sit (60 seconds)}
+\p{Close your eyes for 10 seconds. Open them. Look at the screen. The kiosk captures 30 seconds of EEG across three states:}
+
+\table{
+  \tr{\th{Phase} \th{Duration} \th{Instruction} \th{Room} \th{Trit}}
+  \tr{\td{Rest} \td{10s} \td{Eyes closed, breathe} \td{bci.blue} \td{-1}}
+  \tr{\td{Active} \td{10s} \td{Eyes open, imagine squeezing left hand} \td{bci.red} \td{+1}}
+  \tr{\td{Free} \td{10s} \td{Whatever you want} \td{bci.horse} \td{0}}
+}
+
+\p{The oscilloscope renders your waveform live. You see your brain in real-time. The spectral decomposition runs on-device — delta, theta, alpha, beta, gamma bands separated and colored.}
+}
+
+\subtree{
+\title{Step 4: Result (10 seconds)}
+\p{The kiosk computes your \strong{brain-color} from the spectral signature. It shows:}
+
+\ol{
+  \li{\strong{Your name-color} (from SplitMix64 hash)}
+  \li{\strong{Your brain-color} (from EEG spectral centroid)}
+  \li{\strong{The gap} — the distance between the two in Oklch color space}
+}
+
+\p{If you want to keep your reading: scan the QR code. It links to a page with your anonymized spectral summary. No raw EEG leaves the station. The QR expires in 24 hours.}
+
+\p{Hang the headset back on the hook. Wipe electrodes with a paper towel if you used paste. Done.}
+}
+}
+
+\subtree{
+\title{What Happens To Your Data}
+
+\p{The 30-second recording is processed on-device. The spectral summary (5 band powers, no raw waveform) is stored locally in DuckDB with a random session ID. No name is stored — only the hash. The raw EEG is discarded after the spectral computation completes.}
+
+\p{If you scan the QR: the spectral summary is served for 24 hours, then deleted. If you don't scan: nothing leaves the station.}
+
+\p{The kiosk does not have internet access. It runs on a local machine with no outbound connections. The oscilloscope is a mirror, not a database ([[horse-0001]]).}
+}
+
+\subtree{
+\title{For Operators}
+
+\p{Setup: plug in Cyton dongle, run \code{bb brainfloj.bb} in a terminal, then \code{emacsclient -e '(worlds-kiosk-selfserve)'} to start the self-serve loop. The kiosk handles everything from there.}
+
+\p{Maintenance: charge the Cyton battery weekly (micro-USB). Replace Ten20 paste monthly. Paper towels as needed. The headset electrodes are self-cleaning (dry spikes).}
+
+\p{Troubleshooting: if impedance stays red, wiggle the headset. If the dongle disconnects, unplug/replug — brainfloj_source.py falls back to synthetic board for testing. If Emacs crashes, restart the daemon: \code{emacs --bg-daemon}.}
+}
