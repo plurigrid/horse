@@ -1,0 +1,130 @@
+\title{Helek Entropy Stream: HD-72 Session 5 → Rauzy Tiling}
+\taxon{experiment}
+\author{monaduck1069}
+\import{macros}
+\date{2026-04-11}
+\tag{eeg}
+\tag{entropy}
+\tag{tiling}
+\tag{aptos}
+\tag{randomness}
+\meta{modality}{electrophysiological}
+\meta{device}{Cognionics HD-72 64CH}
+\meta{session}{5}
+\meta{heleks}{250}
+
+\p{Pipeline from 4-channel EEG recording to on-chain entropy commitment via Rauzy tiling. Session 5 (14 min, 2026-04-06) is the only recording with connected electrodes — AFF3 (120 kΩ), FFC3h (87 kΩ), FFC4 (163 kΩ), FCC3 (100 kΩ). All left frontocentral cortex.}
+
+\subtree{\title{Pipeline}
+\taxon{definition}
+
+\pre{\startverb
+HD-72 dry EEG (4 connected channels, 500 Hz)
+  → bandpass 1-45 Hz (scipy butter order 4)
+    → helek windows (3.334s = 1667 samples)
+      → Welch PSD per channel per helek
+        → 5-band power (δ θ α β γ)
+          → Shannon entropy (bits)
+          → GF(3) trit (α-dominant=-1, β-dominant=+1, else=0)
+            → SHA-256 of spectral summary → commit_hash
+            → SHA-256 first 8 bytes → splitmix_seed (uint64)
+              → SplitMix64 → brain_color (hex RGB)
+              → Rauzy substitution index → tile type (a/b/c)
+\stopverb}
+}
+
+\subtree{\title{Results: 250 Heleks}
+\taxon{finding}
+
+\table{
+\tr{\th{Metric}\th{Value}}
+\tr{\td{Duration}\td{837s (13.9 min)}}
+\tr{\td{Heleks}\td{250}}
+\tr{\td{Entropy range}\td{0.083 — 2.318 bits}}
+\tr{\td{Mean entropy}\td{0.795 bits}}
+\tr{\td{Trit distribution}\td{-1: 5, 0: 243, +1: 2}}
+\tr{\td{Brain trit sum mod 3}\td{0 (conserved)}}
+\tr{\td{Rauzy tiles}\td{a: 136, b: 74, c: 40}}
+\tr{\td{a/b ratio}\td{1.84 (converges to plastic number ρ ≈ 1.325)}}
+}
+
+\p{The trit distribution is heavily 0-dominant because the frontocentral electrodes show theta-dominant (not alpha or beta) activity at these impedances. With better contact, expect more -1/+1 variance. The 5 alpha-dominant heleks and 2 beta-dominant heleks are genuine state transitions.}
+}
+
+\subtree{\title{Aptos Commit-Reveal Protocol}
+\taxon{design}
+
+\p{Each helek produces a \code{commit_hash} (first 16 hex chars of SHA-256 of spectral summary). The commit-reveal scheme for on-chain randomness:}
+
+\ol{
+\li{\strong{Commit} (before helek elapses): post \code{commit_hash} on Aptos. This is a binding commitment to the next brain state.}
+\li{\strong{Reveal} (after helek elapses): post the full spectral summary (5 band powers + 4 channel trits). Anyone can verify SHA-256 matches the committed hash.}
+\li{\strong{Seed derivation}: first 8 bytes of SHA-256 → uint64 SplitMix64 seed. Deterministic color and tiling position follow.}
+}
+
+\p{This is \strong{proof of brain} — a randomness beacon that requires a human neural system in the loop. Unlike drand (BLS threshold signatures at 30s rounds), this provides:}
+\ul{
+\li{500 Hz source rate (vs drand's 0.033 Hz)}
+\li{Biometric uniqueness (each brain produces different entropy)}
+\li{Physiological attestation (trit correlates with cognitive state)}
+\li{Unpredictable even to the subject (you cannot predict your own alpha rhythm)}
+}
+}
+
+\subtree{\title{Rauzy Tiling as Generative Index}
+\taxon{definition}
+
+\p{The Rauzy substitution (a→ab, b→ac, c→a) is natively GF(3). Each helek maps to a tile in the Rauzy fractal. The tiling grows as new heleks are recorded — each session extends the fractal. The plastic number ρ ≈ 1.3247 governs the growth rate.}
+
+\p{For asteroid indexing: each newly discovered asteroid receives the next Rauzy tile position and a brain-color from the EEG entropy at discovery time. The fractal is the registry — zoom in and the same three-tile self-similar structure appears at every scale.}
+}
+
+\subtree{\title{nanoclj-zig / zig-syrup Integration}
+\taxon{reference}
+
+\table{
+\tr{\th{Component}\th{Repo}\th{File}\th{Role}}
+\tr{\td{EEG ingest}\td{plurigrid/nanoclj-zig}\td{\code{src/brainfloj.zig}}\td{CSV → entropy + trit per helek}}
+\tr{\td{Propagator network}\td{plurigrid/zig-syrup}\td{\code{src/propagator.zig}}\td{Bidirectional EEG↔color↔chain constraint}}
+\tr{\td{SplitMix64 PRNG}\td{plurigrid/zig-syrup}\td{\code{benchmarks/splitmix69.zig}}\td{Seed → deterministic color sequence}}
+\tr{\td{Time base}\td{plurigrid/zig-syrup}\td{\code{contrib/trit_tick_expanded.zig}}\td{19.44 attosecond universal quantum}}
+\tr{\td{OLC tiling}\td{plurigrid/zig-syrup}\td{\code{contrib/pixel_tile_search.zig}}\td{Sky position → Plus Code}}
+\tr{\td{Rauzy fractal}\td{plurigrid/zig-syrup}\td{\code{tiling/RauzyTiling.hs}}\td{GF(3) substitution tiling}}
+\tr{\td{GoI / drand bridge}\td{plurigrid/zig-syrup}\td{\code{src/goi.zig}}\td{drand round seeds token color}}
+\tr{\td{EEG build}\td{plurigrid/zig-syrup}\td{\code{build_eeg.zig}}\td{cyton_parser + fft_bands}}
+}
+
+\p{nanoclj-zig REPL usage:}
+\pre{\startverb
+;; Load session 5 CSV
+(def data (brainfloj-read "session5_helek_entropy.csv" 12 0))
+;; => {:samples 250 :channels 12 :entropy 0.795 :trit 0}
+
+;; Or process raw EEG directly
+(def raw (brainfloj-read "cognionics_session5_64ch.csv" 64 1))
+;; => {:samples 418282 :channels 64 :entropy ... :trit ...}
+\stopverb}
+}
+
+\subtree{\title{Data Files}
+\taxon{reference}
+
+\table{
+\tr{\th{File}\th{Size}\th{Contents}}
+\tr{\td{\code{session5_helek_entropy.csv}}\td{38 KB}\td{250 heleks: entropy, trit, 5 band powers, commit hash, splitmix seed}}
+\tr{\td{\code{session5_tiling_index.csv}}\td{18 KB}\td{250 tiles: helek + Rauzy tile type + brain color + hue + commit}}
+\tr{\td{\code{cognionics_session5_64ch.csv}}\td{336 MB}\td{Raw 69-channel EEG at 500 Hz (418K samples)}}
+}
+}
+
+\subtree{\title{Connections}
+\taxon{remark}
+\ul{
+\li{\ref{bcf-0052} — HD-72 pipeline design}
+\li{\ref{bcf-0053} — HD-72 serial protocol (3 Mbaud, legacy 0xFF-sync)}
+\li{\ref{bci-0015} — Learnable color space (device-conditional metric)}
+\li{\ref{horse-0001} — bci.horse: name-color vs brain-color gap}
+\li{\ref{bci-0018} — HRV trit as independent autonomic channel}
+\li{\ref{bcf-0058} — IRB coverage (Tier 0 wellness demo for this data)}
+}
+}
