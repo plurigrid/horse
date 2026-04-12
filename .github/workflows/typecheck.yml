@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
       - run: npm install
-      - run: npx tsc --noEmit
+      - run: npx tsc -b
 
   compile-ocaml:
     name: OCaml (cct-reading-group)
@@ -34,7 +34,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Build OCaml project
         working-directory: localcharts/cct-reading-group
-        run: nix-shell -p ocaml dune ocamlPackages.alcotest --run 'dune build'
+        run: nix-shell -p ocaml ocamlPackages.dune_3 ocamlPackages.findlib ocamlPackages.alcotest --run 'dune build'
 
   compile-swift:
     name: Swift (bci-roomscan)
