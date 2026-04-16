@@ -290,32 +290,86 @@
 \p{Status: ALL PURCHASED 2026-04-05. Awaiting delivery.}
 }
 
-\subtree{\title{JLCPCB Order Incident (2026-04-13)}
+\subtree{\title{JLCPCB Order Audit (2026-04-13 to 2026-04-15)}
 \taxon{remark}
 \import{macros}
 
-\p{Two PCBA orders (12291944A-Y4, 12291944A-Y2) were flagged by JLCPCB QA reviewer Sunny for missing solder mask layers and incomplete board outline. Root cause: initial gerber export from KiCad after Altium import did not include F.Mask and B.Mask layers. Orders cancelled, refunded to JLC Balance.}
+\p{Two PCBA orders (12291944A-Y4 for Uncut Gem, 12291944A-Y2 for fNIRS ECU) were cancelled by JLCPCB QA (Sunny) due to missing solder mask layers in the initial gerber export. Root cause: Altium-to-KiCad conversion dropped F_Mask and B_Mask layers. Fixed gerbers re-exported 2026-04-13, archived at assets/gerbers/opennirscap-v2/.}
 
-\subtree{\title{What was missing}
-\ul{
-\li{Order Y4: no top solder mask layer, no bottom solder mask layer, incomplete outline}
-\li{Order Y2: no top solder mask layer, no bottom solder mask layer}
-\li{PCBA orders do not support file-replace, so both had to be cancelled and reordered}
-}}
-
-\subtree{\title{Fixed gerbers (v2, 2026-04-15)}
-\p{Re-exported from KiCad 8 with all required layers. Verified F_Mask, B_Mask, and Edge_Cuts present in all zips before resubmission.}
+\subtree{\title{Board 1: Uncut Gem NV Magnetometer (bcf-0031)}
+\p{Order 12291944A-Y4. Qty 3. ADF4351 PLL + MMG3014NT1 RF amp + BPW34 photodiode + ESP32.}
 \table{
-\tr{\th{File} \th{PCB} \th{Layers verified}}
-\tr{\td{uncutgem_gerbers.zip} \td{ECU main board (Uncut Gem)} \td{F_Cu, B_Cu, F_Mask (26 KB), B_Mask (10 KB), Edge_Cuts, F_Paste, B_Paste, F_Silkscreen, B_Silkscreen, PTH, NPTH}}
-\tr{\td{ecu_gerbers.zip} \td{fNIRS ECU (Altium conversion)} \td{F_Cu (.gtl), B_Cu (.gbl), F_Mask (.gts, 30 KB), B_Mask (.gbs, 1.6 KB), Edge_Cuts (.gm1), F_Paste, B_Paste, F_SilkS, B_SilkS}}
-\tr{\td{sensor_module_gerbers.zip} \td{25 mm circular sensor module} \td{present (to verify)}}
-\tr{\td{stlink_gerbers.zip} \td{ST-LINK breakout} \td{present (to verify)}}
+\tr{\th{Layer} \th{Old (Y4)} \th{New file} \th{Size}}
+\tr{\td{F_Cu} \td{present} \td{Uncut Gem-F_Cu.gbr} \td{399 KB}}
+\tr{\td{B_Cu} \td{present} \td{Uncut Gem-B_Cu.gbr} \td{184 KB}}
+\tr{\td{F_Mask} \td{MISSING} \td{Uncut Gem-F_Mask.gbr} \td{26 KB}}
+\tr{\td{B_Mask} \td{MISSING} \td{Uncut Gem-B_Mask.gbr} \td{10 KB}}
+\tr{\td{F_Paste} \td{present} \td{Uncut Gem-F_Paste.gbr} \td{18 KB}}
+\tr{\td{B_Paste} \td{present} \td{Uncut Gem-B_Paste.gbr} \td{1.6 KB}}
+\tr{\td{F_Silkscreen} \td{present} \td{Uncut Gem-F_Silkscreen.gbr} \td{247 KB}}
+\tr{\td{B_Silkscreen} \td{present} \td{Uncut Gem-B_Silkscreen.gbr} \td{326 KB}}
+\tr{\td{Edge_Cuts} \td{INCOMPLETE} \td{Uncut Gem-Edge_Cuts.gbr} \td{709 B}}
+\tr{\td{PTH Drill} \td{present} \td{Uncut Gem-PTH.drl} \td{6.6 KB}}
+\tr{\td{NPTH Drill} \td{present} \td{Uncut Gem-NPTH.drl} \td{367 B}}
 }
-\p{All gerber zips archived at assets/gerbers/opennirscap-v2/ in this repository.}
 }
 
-\subtree{\title{Lesson learned}
-\p{Always verify solder mask layers (F_Mask, B_Mask) and board outline (Edge_Cuts) are present in exported gerbers before submitting PCBA orders. JLCPCB PCBA orders cannot have files replaced after submission. Use the JLCPCB gerber viewer to confirm layer count before checkout. When converting from Altium to KiCad, explicitly check that all mechanical and mask layers transferred correctly.}
+\subtree{\title{Board 2: fNIRS ECU}
+\p{Order 12291944A-Y2. Qty 1. 112x112mm. STM32L476 + 8x TMUX1104 + 3x PCA9685 + ADUM4160.}
+\table{
+\tr{\th{Layer} \th{Old (Y2)} \th{New file} \th{Size}}
+\tr{\td{F_Cu} \td{present} \td{fNIRS_PCB-PcbDoc-F_Cu.gtl} \td{148 KB}}
+\tr{\td{B_Cu} \td{present} \td{fNIRS_PCB-PcbDoc-B_Cu.gbl} \td{27 KB}}
+\tr{\td{F_Mask} \td{MISSING} \td{fNIRS_PCB-PcbDoc-F_Mask.gts} \td{30 KB}}
+\tr{\td{B_Mask} \td{MISSING} \td{fNIRS_PCB-PcbDoc-B_Mask.gbs} \td{1.6 KB}}
+\tr{\td{F_Paste} \td{present} \td{fNIRS_PCB-PcbDoc-F_Paste.gtp} \td{25 KB}}
+\tr{\td{B_Paste} \td{present} \td{fNIRS_PCB-PcbDoc-B_Paste.gbp} \td{459 B}}
+\tr{\td{F_Silkscreen} \td{present} \td{fNIRS_PCB-PcbDoc-F_SilkS.gto} \td{411 KB}}
+\tr{\td{B_Silkscreen} \td{present} \td{fNIRS_PCB-PcbDoc-B_SilkS.gbo} \td{460 B}}
+\tr{\td{Edge_Cuts} \td{present} \td{fNIRS_PCB-PcbDoc-Edge_Cuts.gm1} \td{681 B}}
+\tr{\td{Drill} \td{present} \td{fNIRS_PCB-PcbDoc.drl} \td{10 KB}}
+\tr{\td{F_Courtyard} \td{--} \td{fNIRS_PCB-PcbDoc-F_CrtYd.gbr} \td{90 KB}}
+\tr{\td{B_Courtyard} \td{--} \td{fNIRS_PCB-PcbDoc-B_CrtYd.gbr} \td{10 KB}}
+}
+}
+
+\subtree{\title{Board 3: Sensor Module (25mm circular)}
+\p{Qty 24. VBPW34S photodiode + AD8618 TIA + VSMD66694 dual LED.}
+\table{
+\tr{\th{Layer} \th{File} \th{Size}}
+\tr{\td{F_Cu} \td{SensorModulePCB-PcbDoc-F_Cu.gtl} \td{6.0 KB}}
+\tr{\td{B_Cu} \td{SensorModulePCB-PcbDoc-B_Cu.gbl} \td{13 KB}}
+\tr{\td{F_Mask} \td{SensorModulePCB-PcbDoc-F_Mask.gts} \td{2.1 KB}}
+\tr{\td{B_Mask} \td{SensorModulePCB-PcbDoc-B_Mask.gbs} \td{4.9 KB}}
+\tr{\td{F_Paste} \td{SensorModulePCB-PcbDoc-F_Paste.gtp} \td{1.1 KB}}
+\tr{\td{B_Paste} \td{SensorModulePCB-PcbDoc-B_Paste.gbp} \td{2.8 KB}}
+\tr{\td{F_Silkscreen} \td{SensorModulePCB-PcbDoc-F_SilkS.gto} \td{12 KB}}
+\tr{\td{B_Silkscreen} \td{SensorModulePCB-PcbDoc-B_SilkS.gbo} \td{29 KB}}
+\tr{\td{Edge_Cuts} \td{SensorModulePCB-PcbDoc-Edge_Cuts.gm1} \td{438 B}}
+\tr{\td{Drill} \td{SensorModulePCB-PcbDoc.drl} \td{805 B}}
+\tr{\td{F_Courtyard} \td{SensorModulePCB-PcbDoc-F_CrtYd.gbr} \td{9.4 KB}}
+\tr{\td{B_Courtyard} \td{SensorModulePCB-PcbDoc-B_CrtYd.gbr} \td{14 KB}}
+}
+\p{All mask layers present. Ready to order.}
+}
+
+\subtree{\title{Board 4: ST-LINK Breakout}
+\p{Qty 1. SWD programming adapter for STM32 firmware flash.}
+\table{
+\tr{\th{Layer} \th{File} \th{Size}}
+\tr{\td{F_Cu} \td{STLINK_Breakout-PcbDoc-F_Cu.gtl} \td{5.1 KB}}
+\tr{\td{B_Cu} \td{STLINK_Breakout-PcbDoc-B_Cu.gbl} \td{2.3 KB}}
+\tr{\td{F_Mask} \td{STLINK_Breakout-PcbDoc-F_Mask.gts} \td{1.9 KB}}
+\tr{\td{B_Mask} \td{STLINK_Breakout-PcbDoc-B_Mask.gbs} \td{1.5 KB}}
+\tr{\td{F_Paste} \td{STLINK_Breakout-PcbDoc-F_Paste.gtp} \td{831 B}}
+\tr{\td{B_Paste} \td{STLINK_Breakout-PcbDoc-B_Paste.gbp} \td{465 B}}
+\tr{\td{F_Silkscreen} \td{STLINK_Breakout-PcbDoc-F_SilkS.gto} \td{13 KB}}
+\tr{\td{B_Silkscreen} \td{STLINK_Breakout-PcbDoc-B_SilkS.gbo} \td{28 KB}}
+\tr{\td{Edge_Cuts} \td{STLINK_Breakout-PcbDoc-Edge_Cuts.gm1} \td{623 B}}
+\tr{\td{Drill} \td{STLINK_Breakout-PcbDoc.drl} \td{675 B}}
+\tr{\td{F_Courtyard} \td{STLINK_Breakout-PcbDoc-F_CrtYd.gbr} \td{1.2 KB}}
+\tr{\td{B_Courtyard} \td{STLINK_Breakout-PcbDoc-B_CrtYd.gbr} \td{640 B}}
+}
+\p{All mask layers present. Ready to order.}
 }
 }
