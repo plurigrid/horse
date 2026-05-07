@@ -33,10 +33,14 @@
 \p{Estimated JLCPCB cost: $130 for 5 assembled boards.}}
 
 \subtree{\title{Hand-solder (RF amplifiers)}
-\p{U2, U3: \strong{NXP MMG3014NT1} — InGaP HBT broadband RF amplifier, 19.5 dB gain, 40 MHz–4 GHz, SOT-89-3. Two per board in cascade for ~39 dB total gain driving the microwave antenna. Order 8 (2/board × 3 + 2 spare).}
+\p{U2, U3: \strong{NXP MMG3014NT1} — InGaP HBT broadband RF amplifier, 19.5 dB gain, 40 MHz–4 GHz, SOT-89-3. Two per board in cascade for ~39 dB total gain driving the microwave antenna. Inventory target: 8 total (2/board × 3 + 2 spare). Procurement complete 2026-05-07: 3 in hand + DigiKey MMG3014NT1CT-ND qty 5 ordered.}
 \ul{
-\li{\strong{Source:} Mouser (5,894 in stock, ships same day, ~$3.50/ea)}
+\li{\strong{Source:} DigiKey, MMG3014NT1CT-ND, qty 5 ordered, immediate stock}
 }}
+
+\subtree{\title{Hand-solder (Schottky diodes)}
+\p{\strong{1N5819W} Schottky diode, 40 V 1 A, SOD-123FL. DigiKey 1655-1N5819WCT-ND qty 10 ordered 2026-05-07 for Uncut Gem diode inventory.}
+}
 
 \subtree{\title{Hand-solder (through-hole connectors)}
 \ul{
@@ -68,7 +72,8 @@
 \taxon{protocol}
 \ol{
 \li{Order JLCPCB: upload gerber zip + JLCPCB-BOM.csv + JLCPCB-CPL.csv. Top-side assembly, economic PCBA, confirm parts placement = yes. Lead time ~2 weeks.}
-\li{Order Mouser: 8× MMG3014NT1. Ships same day.}
+\li{RF amplifier inventory complete: 3× MMG3014NT1 in hand + 5× MMG3014NT1CT-ND ordered from DigiKey.}
+\li{Schottky diode inventory: 10× 1N5819WCT-ND ordered from DigiKey.}
 \li{Order Amazon: connectors, laser, OLED, photodiode, wire, safety gear, charger.}
 \li{Order Adámas: 1× HPHT 1b diamond plate.}
 \li{Receive PCBs: hand-solder U2/U3 (MMG3014NT1, SOT-89), SMA connectors, pin headers/sockets.}
@@ -85,7 +90,8 @@
 \ul{
 \li{JLCPCB (5× PCB + assembly): $130}
 \li{Amazon (connectors + off-board): $251}
-\li{Mouser (8× MMG3014NT1): $28}
+\li{DigiKey (5× MMG3014NT1CT-ND, completes 8× target with 3 in hand): $23.85 plus estimated tariff $2.39}
+\li{DigiKey (10× 1N5819WCT-ND): $1.39 plus estimated tariff $0.14}
 \li{Adámas (1× diamond): $601}
 \li{\strong{Total (first build): ~$1,010}}
 \li{\strong{Total (all 3 builds, 3 diamonds): ~$2,212}}

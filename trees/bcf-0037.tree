@@ -1,12 +1,12 @@
 \title{Inventory}
 \taxon{index}
 \author{monaduck1069}
-\date{2026-04-04}
+\date{2026-05-07}
 \tag{inventory}
 \tag{hardware}
 
 \import{macros}
-\p{Physical assets owned by or on loan to BCI Factory. Last updated 2026-04-04.}
+\p{Physical assets owned by, on loan to, or ordered for BCI Factory. Last updated 2026-05-07.}
 
 \subtree{\title{Owned}
 \taxon{remark}
@@ -35,6 +35,16 @@
   \tr{\td{QSM-001} \td{Uncut Gem NV magnetometer (full PCB)} \td{1} \td{on order} \td{With diamond}}
   \tr{\td{QSM-002} \td{Uncut Gem NV magnetometer (full PCB)} \td{1} \td{on order} \td{No diamond}}
   \tr{\td{QSM-003} \td{Uncut Gem NV magnetometer (full PCB)} \td{1} \td{on order} \td{No diamond}}
+  \tr{\td{QSM-RF-001} \td{MMG3014NT1 RF amplifier inventory} \td{8} \td{complete} \td{3 in hand + 5 DigiKey ordered 2026-05-07}}
+  \tr{\td{QSM-DIO-001} \td{1N5819W SOD-123 Schottky diodes} \td{10} \td{ordered} \td{DigiKey ordered 2026-05-07}}
+  \tr{\td{FNI-001} \td{OpenNIRScap sensor modules} \td{5} \td{on order} \td{JLCPCB sensor batch}}
+  \tr{\td{FNI-ECU-001} \td{OpenNIRScap ECU} \td{1} \td{on order} \td{JLCPCB ECU with corrected hand-solder parts}}
+  \tr{\td{FNI-MUX-001} \td{TMUX1104DGSR analog muxes} \td{8} \td{ordered} \td{Mouser ordered 2026-05-07}}
+  \tr{\td{FNI-USB-001} \td{Molex 67503-1020 USB Mini-B receptacles} \td{2} \td{ordered} \td{Mouser ordered 2026-05-07}}
+  \tr{\td{FNI-PWR-001} \td{LM1085IS-3.3/NOPB TO-263 regulators} \td{2} \td{ordered} \td{Mouser ordered 2026-05-07}}
+  \tr{\td{FNI-SW-001} \td{FSM1LP tactile switches} \td{3} \td{ordered} \td{DigiKey ordered 2026-05-07}}
+  \tr{\td{FNI-CAB-006} \td{S1SS-06-28-GF-10.00-L3 harnesses} \td{5} \td{ordered} \td{Samtec sample order confirmed 2026-05-07}}
+  \tr{\td{FNI-CAB-010} \td{S1SS-10-28-GF-10.00-L3 harnesses} \td{5} \td{ordered} \td{Samtec sample order confirmed 2026-05-07}}
 }
 }
 
@@ -43,6 +53,6 @@
 
 \table{
   \tr{\th{Item} \th{Qty} \th{Est. Cost} \th{Notes}}
-  \tr{\td{OpenNIRScap DIY fNIRS (bcf-0036)} \td{1} \td{$419} \td{Parts list ready}}
+  \tr{\td{OpenNIRScap scale-out beyond 5 sensor modules + 1 ECU (bcf-0036)} \td{1} \td{$419} \td{Prototype inventory ordered}}
 }
 }

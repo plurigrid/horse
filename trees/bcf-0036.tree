@@ -41,12 +41,12 @@
 \taxon{remark}
 
 \subtree{\title{JLCPCB assembles everything (recommended)}
-\p{JLCPCB fabricates and populates all PCBs -- 24 sensor modules (photodiodes, LEDs, op-amps, MOSFETs, passives) and 1 ECU (STM32, MUXes, PWM controller, USB isolator). You buy only non-PCB items from Amazon.}
+\p{JLCPCB fabricates and populates the SMT side for the 5-module sensor batch and 1 ECU. The remaining hand-solder inventory is vendor-split: DigiKey for small immediate parts, Mouser for ECU substitutions, and Samtec samples for the cable harnesses.}
 
 
 \table{
 \tr{\th{Source} \th{What} \th{Cost}}
-\tr{\td{JLCPCB} \td{24 sensor PCBs + 1 ECU + 1 STLINK breakout, fully assembled} \td{$150--$250}}
+\tr{\td{JLCPCB} \td{5 sensor PCBs + 1 ECU + 1 STLINK breakout, SMT side assembled} \td{$150--$250}}
 \tr{\td{Amazon} \td{Battery, programmer, cables, PLA, headband, velcro, tape} \td{$72}}
 \tr{\td{} \td{Total} \td{$220--$320}}
 }
@@ -88,11 +88,32 @@
 \taxon{remark}
 \date{2026-04-05}
 
-\p{Test batch of 5 sensor modules + 5 ECU boards ordered. Altium-to-Gerber conversion pipeline solved (altium2kicad Perl + KiCad CLI 10.0.0). Circular board outline manually fixed in Gerber (degenerate arc bug). GH issue filed: tonykim07/fNIRS#10.}
+\p{Test batch scope: 5 sensor modules + 1 ECU. Altium-to-Gerber conversion pipeline solved (altium2kicad Perl + KiCad CLI 10.0.0). Circular board outline manually fixed in Gerber (degenerate arc bug). GH issue filed: tonykim07/fNIRS#10.}
 
 \subtree{\title{JLCPCB orders}
 \p{Order 1: Sensor module -- 5x 25mm circular 2-layer PCBs, Standard assembly both sides, 11 JLCPCB-placed parts. LeadFree HASL.}
-\p{Order 2: ECU -- 5x 112x128mm 4-layer PCBs, Standard assembly top side, 24 JLCPCB-placed parts. STM32L476RET6 + passives + connectors + switches.}
+\p{Order 2: ECU -- 1x 112x128mm 4-layer PCB, Standard assembly top side, 24 JLCPCB-placed parts. STM32L476RET6 + passives + USBLC6-2SC6 TVS/ESD. U3 regulator, USB Mini-B receptacle, switch, and TMUX muxes are corrected by the 2026-05-07 purchase record below.}
+}
+
+\subtree{\title{Purchase record: 2026-05-07}
+\taxon{remark}
+\date{2026-05-07}
+
+\p{Confirmed fast-arrival inventory for 5 fNIRS sensor modules, 1 ECU, and 3 Uncut Gem boards. These eight line items replace the stale April hand-solder assumptions where they conflict.}
+
+\table{
+\tr{\th{Vendor} \th{MPN} \th{Qty} \th{Applies to} \th{Status}}
+\tr{\td{DigiKey} \td{MMG3014NT1CT-ND} \td{5} \td{Uncut Gem U2/U3 RF amps} \td{ordered, combines with 3 in hand for 8 total}}
+\tr{\td{DigiKey} \td{1655-1N5819WCT-ND} \td{10} \td{Uncut Gem SOD-123 Schottky diodes} \td{ordered, immediate stock}}
+\tr{\td{DigiKey} \td{450-1650-ND} \td{3} \td{fNIRS ECU SW1 tactile switch} \td{ordered, immediate stock}}
+\tr{\td{Mouser} \td{595-TMUX1104DGSR} \td{8} \td{fNIRS ECU analog muxes} \td{ordered, ships now}}
+\tr{\td{Mouser} \td{538-67503-1020} \td{2} \td{fNIRS ECU Mini-B J2} \td{ordered, ships now}}
+\tr{\td{Mouser} \td{926-LM1085IS-3.3NOPB} \td{2} \td{fNIRS ECU U3 TO-263 regulator} \td{ordered, ships now}}
+\tr{\td{Samtec sample} \td{S1SS-06-28-GF-10.00-L3} \td{5} \td{6-pin sensor harnesses} \td{sample order confirmed}}
+\tr{\td{Samtec sample} \td{S1SS-10-28-GF-10.00-L3} \td{5} \td{10-pin sensor-to-ECU harnesses} \td{sample order confirmed}}
+}
+
+\p{Do not buy PRTR5V0U2X for this ECU pass: JLCPCB populated USBLC6-2SC6 at D2. Do not rely on the April AMS1117 U3 substitution: the corrected regulator is LM1085IS-3.3/NOPB in TO-263, purchased from Mouser. Do not buy sensor SMT separately for this pass: JLCPCB already populates the sensor SMT set.}
 }
 
 \subtree{\title{DigiKey order (sensor hand-solder parts)}
@@ -120,7 +141,7 @@
 }}
 
 \subtree{\title{Mouser order}
-\p{TMUX1104DGSR (4:1 analog mux, VSSOP-10) x8 -- not available on DigiKey or LCSC. Found via Octopart.}
+\p{TMUX1104DGSR (4:1 analog mux, VSSOP-10) x8 -- ordered from Mouser 2026-05-07 after DigiKey/LCSC routes were unsuitable.}
 }
 
 \subtree{\title{Amazon order}
@@ -198,7 +219,7 @@
 \taxon{remark}
 \date{2026-04-05}
 
-\p{Every item purchased. Three vendors: JLCPCB, DigiKey, Amazon.}
+\p{April record retained for production provenance. The 2026-05-07 purchase record above is the current fast-arrival inventory truth for hand-solder and substitution parts.}
 
 \subtree{\title{JLCPCB: sensor module (5x boards + assembly)}
 \table{
@@ -220,7 +241,7 @@
 \tr{\td{--} \td{J1: T1M-06-F-SH-L-K connector} \td{1} \td{hand-solder}}
 }}
 
-\subtree{\title{JLCPCB: ECU (5x boards + assembly)}
+\subtree{\title{JLCPCB: ECU (1x board + assembly)}
 \table{
 \tr{\th{LCSC} \th{Part} \th{Qty} \th{Placed by}}
 \tr{\td{C71075} \td{STM32L476RET6 MCU} \td{1} \td{JLCPCB}}
@@ -229,8 +250,8 @@
 \tr{\td{C579406} \td{ADUM4160BRWZ USB isolator} \td{1} \td{JLCPCB}}
 \tr{\td{C7519} \td{USBLC6-2SC6 TVS/ESD} \td{1} \td{JLCPCB}}
 \tr{\td{C424093} \td{MCP73831T Li-Ion charger} \td{1} \td{JLCPCB}}
-\tr{\td{C6186} \td{AMS1117-3.3 LDO} \td{1} \td{JLCPCB}}
-\tr{\td{C46398} \td{USB Mini-B connector} \td{1} \td{JLCPCB}}
+\tr{\td{--} \td{U3 corrected to LM1085IS-3.3/NOPB TO-263} \td{1} \td{Mouser, hand-solder}}
+\tr{\td{--} \td{J2 corrected to Molex 67503-1020 USB Mini-B} \td{1} \td{Mouser, hand-solder}}
 \tr{\td{C23162} \td{4.7K 1 percent 0603} \td{4} \td{JLCPCB}}
 \tr{\td{C142556} \td{NTC 10K thermistor 0603} \td{3} \td{JLCPCB}}
 \tr{\td{C14663} \td{100nF 0603} \td{15} \td{JLCPCB}}
@@ -244,7 +265,7 @@
 \tr{\td{C21189} \td{0R 0603} \td{9} \td{JLCPCB}}
 \tr{\td{C21190} \td{1K 0603} \td{5} \td{JLCPCB}}
 \tr{\td{C25803} \td{100K 0603} \td{1} \td{JLCPCB}}
-\tr{\td{C318884} \td{Tactile switch} \td{1} \td{JLCPCB}}
+\tr{\td{--} \td{SW1 corrected to FSM1LP tactile switch} \td{1} \td{DigiKey, hand-solder}}
 \tr{\td{C431540} \td{Slide switch SPDT} \td{1} \td{JLCPCB}}
 \tr{\td{C965799} \td{LED 0603} \td{1} \td{JLCPCB}}
 \tr{\td{--} \td{U2: B0512S-2WR3 DC-DC} \td{1} \td{hand-solder}}
@@ -274,7 +295,10 @@
 \tr{\td{490-1015-1-ND} \td{BLM18AG102SN1D} \td{Ferrite bead 0603} \td{1}}
 \tr{\td{WM6698CT-ND} \td{0472192001} \td{Molex micro SD connector} \td{1}}
 \tr{\td{490-10720-1-ND} \td{GRM1885C1H4R0CA01D} \td{4pF C0G 0603} \td{2}}
-\tr{\td{296-53437-1-ND} \td{TMUX1104DGSR} \td{4:1 analog mux VSSOP-10} \td{8}}
+\tr{\td{450-1650-ND} \td{FSM1LP} \td{Tactile switch SPST-NO} \td{3}}
+\tr{\td{Mouser 595-TMUX1104DGSR} \td{TMUX1104DGSR} \td{4:1 analog mux VSSOP-10} \td{8}}
+\tr{\td{Mouser 538-67503-1020} \td{67503-1020} \td{USB Mini-B receptacle right angle} \td{2}}
+\tr{\td{Mouser 926-LM1085IS-3.3NOPB} \td{LM1085IS-3.3/NOPB} \td{3.3V 3A LDO TO-263} \td{2}}
 }}
 
 \subtree{\title{Amazon}
@@ -373,25 +397,25 @@
 \p{All mask layers present. Ready to order.}
 }
 
-\subtree{	itle{DFM Verification Checklist}
+\subtree{\title{DFM Verification Checklist}
 \p{Per-layer manufacturing checks required before resubmission to JLCPCB. Based on IPC Class 2 standards and JLCPCB capability limits.}
-	able{
-	r{	h{Check} 	h{Requirement} 	h{Consequence if failed}}
-	r{	d{Mask polarity} 	d{Solder mask must be NEGATIVE (drawn areas = openings)} 	d{Entire board unsolderable}}
-	r{	d{Mask expansion} 	d{4-6 mil (0.1-0.15mm) around pads, never zero} 	d{Tombstoning, solder bridges on 0201}}
-	r{	d{Mask web} 	d{>=4 mil between pads (green), >=5 mil other colors} 	d{Solder bridges between IC pins}}
-	r{	d{Outline closed} 	d{Edge_Cuts must be single closed contour, no gaps} 	d{Board cut to wrong shape or rejected}}
-	r{	d{Drill units} 	d{Must match gerber units (both metric or both imperial)} 	d{Holes wrong size, components do not fit}}
-	r{	d{Drill separation} 	d{PTH and NPTH in separate files} 	d{Mounting holes get plated with copper}}
-	r{	d{Drill alignment} 	d{Same coordinate origin as gerbers} 	d{Holes miss pads, vias do not connect}}
-	r{	d{Annular ring} 	d{>=6 mil external, >=4 mil internal} 	d{Drill wander breaks connection}}
-	r{	d{Aspect ratio} 	d{<=8:1 (board thickness / drill diameter)} 	d{Plating voids, unreliable vias}}
-	r{	d{Trace width} 	d{>=6 mil (0.15mm) standard} 	d{Over-etched open circuits}}
-	r{	d{Trace spacing} 	d{>=6 mil between traces and pads} 	d{Short circuits}}
-	r{	d{Copper balance} 	d{30-70 pct coverage per layer} 	d{Board warpage during reflow}}
-	r{	d{Silk clearance} 	d{>=0.15mm from pads, no overlap} 	d{AOI failure, solder issues}}
-	r{	d{Paste aperture} 	d{Pad size times 90 pct for QFN/BGA} 	d{Insufficient or excess solder}}
-	r{	d{No macOS files} 	d{Remove ._ and .DS_Store from zip} 	d{Confuses CAM software}}
+\table{
+\tr{\th{Check} \th{Requirement} \th{Consequence if failed}}
+\tr{\td{Mask polarity} \td{Solder mask must be NEGATIVE (drawn areas = openings)} \td{Entire board unsolderable}}
+\tr{\td{Mask expansion} \td{4-6 mil (0.1-0.15mm) around pads, never zero} \td{Tombstoning, solder bridges on 0201}}
+\tr{\td{Mask web} \td{>=4 mil between pads (green), >=5 mil other colors} \td{Solder bridges between IC pins}}
+\tr{\td{Outline closed} \td{Edge_Cuts must be single closed contour, no gaps} \td{Board cut to wrong shape or rejected}}
+\tr{\td{Drill units} \td{Must match gerber units (both metric or both imperial)} \td{Holes wrong size, components do not fit}}
+\tr{\td{Drill separation} \td{PTH and NPTH in separate files} \td{Mounting holes get plated with copper}}
+\tr{\td{Drill alignment} \td{Same coordinate origin as gerbers} \td{Holes miss pads, vias do not connect}}
+\tr{\td{Annular ring} \td{>=6 mil external, >=4 mil internal} \td{Drill wander breaks connection}}
+\tr{\td{Aspect ratio} \td{<=8:1 (board thickness / drill diameter)} \td{Plating voids, unreliable vias}}
+\tr{\td{Trace width} \td{>=6 mil (0.15mm) standard} \td{Over-etched open circuits}}
+\tr{\td{Trace spacing} \td{>=6 mil between traces and pads} \td{Short circuits}}
+\tr{\td{Copper balance} \td{30-70 pct coverage per layer} \td{Board warpage during reflow}}
+\tr{\td{Silk clearance} \td{>=0.15mm from pads, no overlap} \td{AOI failure, solder issues}}
+\tr{\td{Paste aperture} \td{Pad size times 90 pct for QFN/BGA} \td{Insufficient or excess solder}}
+\tr{\td{No macOS files} \td{Remove ._ and .DS_Store from zip} \td{Confuses CAM software}}
 }
 }
 
