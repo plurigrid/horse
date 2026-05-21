@@ -321,3 +321,5 @@
   \p{The OpenNIRScap 24-channel cap ([[bcf-0036]], on order) adds cortical hemodynamic measurement that no clinical sleep lab performs during polysomnography.}
   \p{[[bcf-0032]] NIRx NIRSport 2 (50K–120K USD, research grade) and [[bcf-0031]] NV diamond magnetometer (1K USD) provide further modalities unavailable in any PSG configuration.}
   \p{This positions the BCI Factory stack as a superset of clinical PSG — measuring electrical, hemodynamic, and magnetic brain signals simultaneously during sleep.}
+}
+}

@@ -15,7 +15,7 @@ Voters simulate each device's world via the embedded WASM gain-of-function kerne
 before casting a vote.}
 
 
-\p{Each row links to its per-item detail tree via \code{\\ref\{bcf-INV-<slug>\}}.}
+\p{Each row links to its per-item detail tree via \code{bcf-INV-<slug>}.}
 \subtree{\title{Schema}
 \p{Each device record: \code{id, name, status, cost_usd, modality, channels, sim_params, url, notes}.}
 \p{Status values: \code{own}, \code{building}, \code{on-order}, \code{want}, \code{lent-to-us}, \code{lent-from-us}, \code{dont-want}.}
